@@ -3,109 +3,145 @@ import { courseStats, topPriorities, students, teams, frameworkAnalysis, submiss
 
 type Screen = "overview" | "students" | "teams" | "framework" | "submission" | "hitl" | "debrief" | "workflow";
 
-export default function Home() {
-  const [screen, setScreen] = useState<Screen>("overview");
-  const [studentFilter, setStudentFilter] = useState<string>("all");
-  const [teamFilter, setTeamFilter] = useState<string>("all");
-  const [selectedTeam, setSelectedTeam] = useState(teams[0]);
+const S: Record<string, string> = {
+  overview: "Overview", students: "Students", teams: "Teams", framework: "Framework",
+  submission: "Submission", hitl: "HITL Queue", debrief: "Debrief", workflow: "Architecture",
+};
 
-  const renderNav = () => (
-    <nav className="nav">
-      {(["overview", "students", "teams", "framework", "submission", "hitl", "debrief", "workflow"] as Screen[]).map((s) => (
-        <div key={s} className={`nav-item ${screen === s ? "active" : ""}`} onClick={() => setScreen(s)}>
-          {s.charAt(0).toUpperCase() + s.slice(1)}
-        </div>
+export default function Home() {
+  const [scr, setScr] = useState<Screen>("overview");
+  const [sf, setSf] = useState("all");
+  const [tf, setTf] = useState("all");
+  const [sel, setSel] = useState(teams[0]);
+
+  const Nav = () => (
+    <nav className="tab-nav">
+      {(Object.keys(S) as Screen[]).map(s => (
+        <button key={s} className={`tab-btn ${scr === s ? "active" : ""}`} onClick={() => setScr(s)}>{S[s]}</button>
       ))}
     </nav>
   );
 
-  const renderOverview = () => (
+  /* ── Overview ─────────────────────────────────────────────── */
+  const Overview = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">AI Native Week — Professor Cockpit</h1>
-        <p className="page-subtitle">Day 3 of 4 — Prototype Build Day</p>
+      <div className="sp-6">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Professor Cockpit</h1>
+        <p className="p">AI Native Week — Day 3 of 4 · Prototype Build Day</p>
       </div>
-      <div className="grid-4 mb-4">
+
+      <div className="grid-4 sp-4">
         <div className="stat-card">
-          <div className="stat-label">Active Students</div>
-          <div className="stat-value text-green">{courseStats.activeStudents} <span style={{fontSize:"16px",color:"var(--text-muted)"}}>/ {courseStats.totalStudents}</span></div>
+          <div className="stat-card__eyebrow">Active Students</div>
+          <div className="stat-card__value text-green">{courseStats.activeStudents}<span className="stat-card__sub" style={{fontSize:"20px",fontWeight:400}}>/{courseStats.totalStudents}</span></div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Assignment Completion</div>
-          <div className="stat-value text-yellow">{courseStats.assignmentCompletion}%</div>
-          <div className="progress-bar mt-2"><div className="progress-fill yellow" style={{width:"35%"}}/></div>
+          <div className="stat-card__eyebrow">Assignment Completion</div>
+          <div className="stat-card__value text-amber">{courseStats.assignmentCompletion}%</div>
+          <div className="prog" style={{marginTop:"12px"}}><div className="prog__fill prog__fill--amber" style={{width:"35%"}}/></div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Average Grade</div>
-          <div className="stat-value text-muted">{courseStats.averageGrade}</div>
+          <div className="stat-card__eyebrow">Average Grade</div>
+          <div className="stat-card__value text-muted">—</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Missing Assignments</div>
-          <div className="stat-value text-red">{courseStats.missingAssignments}</div>
+          <div className="stat-card__eyebrow">Missing Assignments</div>
+          <div className="stat-card__value text-red">{courseStats.missingAssignments}</div>
         </div>
       </div>
-      <div className="grid-2 mb-4">
+
+      <div className="grid-2">
         <div className="card">
-          <div className="card-header"><span className="card-title">Top Priorities Today</span><span className="badge badge-red">5 items</span></div>
-          <ul className="priority-list">
-            {topPriorities.map((p) => (
-              <li key={p.id} className="priority-item">
-                <div className="priority-number">{p.id}</div>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:"14px"}}>{p.text}</div>
-                  <div style={{fontSize:"12px",color:p.priority==="high"?"var(--red)":p.priority==="medium"?"var(--yellow)":"var(--text-muted)",marginTop:"4px",textTransform:"uppercase"}}>{p.priority}</div>
+          <div className="card__header">
+            <span className="card__title">Top Priorities</span>
+            <span className="tag tag--red">{topPriorities.length}</span>
+          </div>
+          <ul className="section-list">
+            {topPriorities.map(p => (
+              <li key={p.id} className="section-item">
+                <div className="section-item__num">{p.id}</div>
+                <div className="section-item__body">
+                  <div className="section-item__text">{p.text}</div>
+                  <div className="section-item__label" style={{color:p.priority==="high"?"var(--red)":p.priority==="medium"?"var(--amber)":"var(--ink-3)"}}>{p.priority}</div>
                 </div>
               </li>
             ))}
           </ul>
         </div>
+
         <div className="card">
-          <div className="card-header"><span className="card-title">Alerts</span></div>
-          <div className="alert-card danger"><div className="alert-icon">!</div><div className="alert-text"><strong>4 students</strong> flagged for immediate review (AI-generated content risk signals)</div></div>
-          <div className="alert-card warning"><div className="alert-icon">!</div><div className="alert-text"><strong>8 late submissions</strong> from Day 2-3 assignments</div></div>
-          <div className="alert-card warning"><div className="alert-icon">!</div><div className="alert-text"><strong>5 materials</strong> have low open rates (&lt;50%)</div></div>
-          <div className="alert-card info"><div className="alert-icon">i</div><div className="alert-text"><strong>Project Ghost (T07)</strong> — Oxygen Test failed, no working prototype</div></div>
+          <div className="card__header">
+            <span className="card__title">Active Alerts</span>
+          </div>
+          <div className="alert alert--red">
+            <div className="alert__dot"/><div><strong>4 students</strong> flagged for AI-generated content risk review</div>
+          </div>
+          <div className="alert alert--amber">
+            <div className="alert__dot"/><div><strong>8 late submissions</strong> from Days 2–3</div>
+          </div>
+          <div className="alert alert--amber">
+            <div className="alert__dot"/><div><strong>5 materials</strong> below 50% open rate</div>
+          </div>
+          <div className="alert alert--blue">
+            <div className="alert__dot"/><div><strong>Project Ghost (T07)</strong> — Oxygen Test failed, no prototype URL</div>
+          </div>
         </div>
       </div>
-      <div className="card">
-        <div className="card-header"><span className="card-title">HITL Decision Required</span><span className="badge badge-red">4 pending</span></div>
-        <div style={{fontSize:"14px",color:"var(--text-secondary)"}}>The following decisions require professor approval before feedback is sent to students:</div>
-        <div className="mt-2" style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
-          <span className="badge badge-red">AI-risk review (4 cases)</span>
-          <span className="badge badge-yellow">Late submission grace (8 cases)</span>
-          <span className="badge badge-blue">Missing citation warning (3 cases)</span>
+
+      <div className="card sp-3">
+        <div className="card__header">
+          <span className="card__title">HITL Decisions Pending</span>
+          <span className="tag tag--red">4</span>
+        </div>
+        <p className="p" style={{marginBottom:"12px"}}>These decisions require professor approval before feedback is sent.</p>
+        <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+          <span className="tag tag--red">AI-Risk Review (4)</span>
+          <span className="tag tag--amber">Late Submission Grace (8)</span>
+          <span className="tag tag--blue">Missing Citations (3)</span>
         </div>
       </div>
     </div>
   );
 
-  const renderStudents = () => (
+  /* ── Students ─────────────────────────────────────────────── */
+  const Students = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Student Risk Radar</h1>
-        <p className="page-subtitle">20 of 80 students shown (synthetic anonymized data)</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Student Risk Radar</h1>
+        <p className="p">Showing 20 of 80 students — synthetic anonymized data</p>
       </div>
+
       <div className="filter-bar">
-        <button className={`filter-btn ${studentFilter === "all" ? "active" : ""}`} onClick={() => setStudentFilter("all")}>All</button>
-        <button className={`filter-btn ${studentFilter === "red" ? "active" : ""}`} onClick={() => setStudentFilter("red")}>Red Flag</button>
-        <button className={`filter-btn ${studentFilter === "yellow" ? "active" : ""}`} onClick={() => setStudentFilter("yellow")}>Monitor</button>
-        <button className={`filter-btn ${studentFilter === "green" ? "active" : ""}`} onClick={() => setStudentFilter("green")}>On Track</button>
+        {[["all","All"],["red","Red Flag"],["yellow","Monitor"],["green","On Track"]].map(([v,l]) => (
+          <button key={v} className={`filter-btn ${sf===v?"active":""}`} onClick={()=>setSf(v)}>{l}</button>
+        ))}
       </div>
-      <div className="table-container">
+
+      <div className="t-wrap">
         <table>
-          <thead><tr><th>ID</th><th>Completion</th><th>Missing</th><th>Late</th><th>Materials</th><th>Contribution</th><th>AI Risk</th><th>Status</th><th>Recommended Action</th></tr></thead>
+          <thead>
+            <tr>
+              <th>ID</th><th>Completion</th><th>Missing</th><th>Late</th><th>Materials</th>
+              <th>Contribution</th><th>AI Risk</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
           <tbody>
-            {students.filter(s => studentFilter === "all" || s.status === studentFilter).map(s => (
+            {students.filter(s=>sf==="all"||s.status===sf).map(s=>(
               <tr key={s.id}>
-                <td><span style={{fontFamily:"monospace"}}>{s.id}</span></td>
-                <td><div style={{display:"flex",alignItems:"center",gap:"8px"}}><div className="progress-bar" style={{width:"60px"}}><div className={`progress-fill ${s.completion >= 75 ? "green" : s.completion >= 50 ? "yellow" : "red"}`} style={{width:`${s.completion}%`}}/></div><span style={{fontSize:"12px"}}>{s.completion}%</span></div></td>
-                <td><span style={{color:s.missing > 2 ? "var(--red)" : "inherit"}}>{s.missing}</span></td>
-                <td><span style={{color:s.late > 0 ? "var(--yellow)" : "inherit"}}>{s.late}</span></td>
-                <td><span style={{color:s.materialsOpened < 60 ? "var(--red)" : "inherit"}}>{s.materialsOpened}%</span></td>
-                <td><span className={`badge ${s.contributionQuality === "High" ? "badge-green" : s.contributionQuality === "Medium" ? "badge-yellow" : "badge-red"}`}>{s.contributionQuality}</span></td>
-                <td><span className={`badge ${s.aiRisk === "Low" ? "badge-green" : s.aiRisk === "Medium" ? "badge-yellow" : "badge-red"}`}>{s.aiRisk}</span></td>
-                <td><span className={`badge badge-${s.status}`}>{s.status.toUpperCase()}</span></td>
-                <td style={{fontSize:"13px"}}>{s.action}</td>
+                <td><span className="mono">{s.id}</span></td>
+                <td>
+                  <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                    <div className="prog" style={{width:"56px"}}><div className={`prog__fill ${s.completion>=75?"prog__fill--green":s.completion>=50?"prog__fill--amber":"prog__fill--red"}`} style={{width:`${s.completion}%`}}/></div>
+                    <span style={{fontSize:"11px",color:"var(--ink-2)"}}>{s.completion}%</span>
+                  </div>
+                </td>
+                <td><span style={{color:s.missing>2?"var(--red)":"var(--ink-2)"}}>{s.missing}</span></td>
+                <td><span style={{color:s.late>0?"var(--amber)":"var(--ink-2)"}}>{s.late}</span></td>
+                <td><span style={{color:s.materialsOpened<60?"var(--red)":"var(--ink-2)"}}>{s.materialsOpened}%</span></td>
+                <td><span className={`tag ${s.contributionQuality==="High"?"tag--green":s.contributionQuality==="Medium"?"tag--amber":"tag--red"}`}>{s.contributionQuality}</span></td>
+                <td><span className={`tag ${s.aiRisk==="Low"?"tag--green":s.aiRisk==="Medium"?"tag--amber":"tag--red"}`}>{s.aiRisk}</span></td>
+                <td><span className={`tag tag--${s.status==="green"?"green":s.status==="yellow"?"amber":"red"}`}>{s.status.toUpperCase()}</span></td>
+                <td style={{fontSize:"12px",color:"var(--ink-2)"}}>{s.action}</td>
               </tr>
             ))}
           </tbody>
@@ -114,47 +150,49 @@ export default function Home() {
     </div>
   );
 
-  const renderTeams = () => (
+  /* ── Teams ────────────────────────────────────────────────── */
+  const Teams = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Team Progress Dashboard</h1>
-        <p className="page-subtitle">8 synthetic teams — filter and click for detailed analysis</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Team Progress</h1>
+        <p className="p">8 teams · click any card to open Framework Analyzer</p>
       </div>
+
       <div className="filter-bar">
-        <button className={`filter-btn ${teamFilter === "all" ? "active" : ""}`} onClick={() => setTeamFilter("all")}>All Teams</button>
-        <button className={`filter-btn ${teamFilter === "red" ? "active" : ""}`} onClick={() => setTeamFilter("red")}>Critical</button>
-        <button className={`filter-btn ${teamFilter === "yellow" ? "active" : ""}`} onClick={() => setTeamFilter("yellow")}>Needs Attention</button>
-        <button className={`filter-btn ${teamFilter === "green" ? "active" : ""}`} onClick={() => setTeamFilter("green")}>On Track</button>
+        {[["all","All Teams"],["red","Critical"],["yellow","Needs Attention"],["green","On Track"]].map(([v,l])=>(
+          <button key={v} className={`filter-btn ${tf===v?"active":""}`} onClick={()=>setTf(v)}>{l}</button>
+        ))}
       </div>
-      <div className="grid-2">
-        {teams.filter(t => {
-          if (teamFilter === "all") return true;
-          if (teamFilter === "red") return t.oxygenTest === "Fail" || t.prototypeReadiness < 45;
-          if (teamFilter === "yellow") return t.oxygenTest === "Conditionally Pass" || t.prototypeReadiness < 70;
-          return t.oxygenTest === "Pass" && t.prototypeReadiness >= 70;
-        }).map(t => {
-          const overallScore = Math.round((t.problemClarity + t.audienceClarity + t.painUrgency + t.aiNativeScore + t.prototypeReadiness) / 5);
+
+      <div className="grid-3">
+        {teams.filter(t=>{
+          if(tf==="all") return true;
+          if(tf==="red") return t.oxygenTest==="Fail"||t.prototypeReadiness<45;
+          if(tf==="yellow") return t.oxygenTest==="Conditionally Pass"||t.prototypeReadiness<70;
+          return t.oxygenTest==="Pass"&&t.prototypeReadiness>=70;
+        }).map(t=>{
+          const score=Math.round((t.problemClarity+t.audienceClarity+t.painUrgency+t.aiNativeScore+t.prototypeReadiness)/5);
           return (
-            <div key={t.id} className="team-card" onClick={() => { setSelectedTeam(t); setScreen("framework"); }} style={{cursor:"pointer"}}>
-              <div className="team-header">
+            <div key={t.id} className="team-card" onClick={()=>{setSel(t);setScr("framework");}}>
+              <div className="team-card__head">
                 <div>
-                  <div className="team-name">{t.name} <span style={{fontSize:"12px",color:"var(--text-muted)"}}>({t.id})</span></div>
-                  <div style={{fontSize:"12px",color:"var(--text-muted)",marginTop:"2px"}}>Oxygen Test: <span className={`badge ${t.oxygenTest === "Pass" ? "badge-green" : t.oxygenTest === "Conditionally Pass" ? "badge-yellow" : "badge-red"}`} style={{fontSize:"10px"}}>{t.oxygenTest}</span></div>
+                  <div className="team-card__name">{t.name}</div>
+                  <div className="team-card__id">{t.id}</div>
+                  <div style={{marginTop:"6px"}}>
+                    <span className={`tag ${t.oxygenTest==="Pass"?"tag--green":t.oxygenTest==="Conditionally Pass"?"tag--amber":"tag--red"}`} style={{fontSize:"9px"}}>{t.oxygenTest}</span>
+                  </div>
                 </div>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:"24px",fontWeight:700}}>{overallScore}</div>
-                  <div style={{fontSize:"11px",color:"var(--text-muted)"}}>Overall Score</div>
+                  <div className="team-card__score">{score}</div>
+                  <div className="stat-card__sub">Overall</div>
                 </div>
               </div>
-              <div className="team-metrics">
-                <div className="team-metric"><span className="team-metric-label">Problem: </span><span className="team-metric-value">{t.problemClarity}%</span></div>
-                <div className="team-metric"><span className="team-metric-label">Audience: </span><span className="team-metric-value">{t.audienceClarity}%</span></div>
-                <div className="team-metric"><span className="team-metric-label">AI-Native: </span><span className="team-metric-value">{t.aiNativeScore}%</span></div>
-                <div className="team-metric"><span className="team-metric-label">Prototype: </span><span className="team-metric-value">{t.prototypeReadiness}%</span></div>
-                <div className="team-metric"><span className="team-metric-label">Governance: </span><span className="team-metric-value">{t.governanceReadiness}%</span></div>
-                <div className="team-metric"><span className="team-metric-label">Presentation: </span><span className="team-metric-value">{t.presentationReadiness}%</span></div>
+              <div className="team-card__metrics">
+                {[["Problem",`${t.problemClarity}%`],["Audience",`${t.audienceClarity}%`],["AI-Native",`${t.aiNativeScore}%`],["Prototype",`${t.prototypeReadiness}%`],["Governance",`${t.governanceReadiness}%`],["Presentation",`${t.presentationReadiness}%`]].map(([l,v])=>(
+                  <div key={l} className="team-card__metric"><span className="team-card__metric-label" style={{color:"var(--ink-3)",fontSize:"10px"}}>{l}: </span><span className="team-card__metric-val">{v}</span></div>
+                ))}
               </div>
-              <div style={{marginTop:"12px",paddingTop:"12px",borderTop:"1px solid var(--border)",fontSize:"13px",color:"var(--accent)"}}>-&gt; {t.nextIntervention}</div>
+              <div className="team-card__action">→ {t.nextIntervention}</div>
             </div>
           );
         })}
@@ -162,113 +200,137 @@ export default function Home() {
     </div>
   );
 
-  const renderFramework = () => (
+  /* ── Framework ───────────────────────────────────────────── */
+  const Framework = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Framework Analyzer</h1>
-        <p className="page-subtitle">Decision-support tool — professor remains final evaluator</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Framework Analyzer</h1>
+        <p className="p">Decision-support tool — professor remains final evaluator</p>
       </div>
-      <div className="filter-bar mb-4">
-        {teams.map(t => (
-          <button key={t.id} className={`filter-btn ${selectedTeam.id === t.id ? "active" : ""}`} onClick={() => setSelectedTeam(t)}>{t.name}</button>
+
+      <div className="filter-bar sp-4">
+        {teams.map(t=>(
+          <button key={t.id} className={`filter-btn ${sel.id===t.id?"active":""}`} onClick={()=>setSel(t)}>{t.name}</button>
         ))}
       </div>
+
       <div className="card">
-        <div className="card-header">
-          <span className="card-title">{selectedTeam.name} — Framework Analysis</span>
-          <span className="badge badge-blue">AI-Generated Analysis</span>
+        <div className="card__header">
+          <span className="card__title">{sel.name}</span>
+          <span className="tag tag--blue">AI Analysis</span>
         </div>
-        <div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"16px"}}>This analysis is a decision-support signal only. The professor remains the final evaluator of student work.</div>
+        <p className="p" style={{marginBottom:"24px",fontStyle:"italic"}}>This is a decision-support signal only. The professor remains the final evaluator of student work.</p>
         {[
-          { title: "Problem", key: "problem" },
-          { title: "Audience", key: "audience" },
-          { title: "Pain", key: "pain" },
-          { title: "Wedge", key: "wedge" },
-          { title: "Oxygen Test", key: "oxygenTest" },
-          { title: "7-Layer AI-Native Capability Model", key: "sevenLayers" },
-          { title: "PERCH Analysis", key: "perch" },
-          { title: "HITL Pattern", key: "hitlPattern" },
-          { title: "Governance Risk", key: "governanceRisk" },
-          { title: "Prototype Proof", key: "prototypeProof" },
-        ].map(({ title, key }) => (
-          <div key={key} className="analysis-section">
-            <div className="analysis-title">{title}</div>
-            <div className="analysis-content">{(frameworkAnalysis as Record<string, string>)[key]}</div>
+          {title:"Problem",              key:"problem"},
+          {title:"Audience",             key:"audience"},
+          {title:"Pain",                key:"pain"},
+          {title:"Wedge",              key:"wedge"},
+          {title:"Oxygen Test",         key:"oxygenTest"},
+          {title:"7-Layer Capability",  key:"sevenLayers"},
+          {title:"PERCH Analysis",      key:"perch"},
+          {title:"HITL Pattern",        key:"hitlPattern"},
+          {title:"Governance Risk",    key:"governanceRisk"},
+          {title:"Prototype Proof",    key:"prototypeProof"},
+        ].map(({title,key})=>(
+          <div key={key} className="analysis-block">
+            <div className="analysis-block__title">{title}</div>
+            <div className="analysis-block__body">{(frameworkAnalysis as Record<string,string>)[key]}</div>
           </div>
         ))}
       </div>
     </div>
   );
 
-  const renderSubmission = () => (
+  /* ── Submission ───────────────────────────────────────────── */
+  const Submission = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Submission Analyzer</h1>
-        <p className="page-subtitle">Mock submission analysis panel — human review required</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Submission Analyzer</h1>
+        <p className="p">Mock analysis panel — human review required for flagged cases</p>
       </div>
-      <div className="grid-2">
+
+      <div className="sub-grid sp-4">
         <div className="card">
-          <div className="card-header"><span className="card-title">Submission Status</span></div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-            <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Timeliness</div><span className={`badge ${submissionAnalysis.onTime ? "badge-green" : "badge-red"}`}>{submissionAnalysis.onTime ? "ON TIME" : "LATE"}</span></div>
-            <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Completeness</div><span className="badge badge-blue">{submissionAnalysis.completeness}%</span></div>
-            <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Citations</div><span className={`badge ${submissionAnalysis.missingCitations ? "badge-red" : "badge-green"}`}>{submissionAnalysis.missingCitations ? "MISSING" : "OK"}</span></div>
-            <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Human Review</div><span className={`badge ${submissionAnalysis.humanReviewRequired ? "badge-red" : "badge-green"}`}>{submissionAnalysis.humanReviewRequired ? "REQUIRED" : "NOT NEEDED"}</span></div>
+          <div className="card__header"><span className="card__title">Status</span></div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:"16px"}}>
+            {[
+              ["Timeliness",  submissionAnalysis.onTime?"tag--green":"tag--red",    submissionAnalysis.onTime?"ON TIME":"LATE"],
+              ["Completeness","tag--blue",                                         `${submissionAnalysis.completeness}%`],
+              ["Citations",   submissionAnalysis.missingCitations?"tag--red":"tag--green", submissionAnalysis.missingCitations?"MISSING":"OK"],
+              ["Human Review",submissionAnalysis.humanReviewRequired?"tag--red":"tag--green", submissionAnalysis.humanReviewRequired?"REQUIRED":"NOT NEEDED"],
+            ].map(([label,cls,val])=>(
+              <div key={label as string}>
+                <div className="eyebrow" style={{marginBottom:"6px"}}>{label as string}</div>
+                <span className={`tag ${cls}`}>{val}</span>
+              </div>
+            ))}
           </div>
         </div>
+
         <div className="card">
-          <div className="card-header"><span className="card-title">Risk Assessment</span></div>
-          <div style={{marginBottom:"12px"}}><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>AI-Generated Content Risk</div><span className="badge badge-red">{submissionAnalysis.aiGeneratedContentRisk} — RISK SIGNAL</span></div>
-          <div style={{marginBottom:"12px"}}><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Collaboration Evidence</div><div style={{fontSize:"13px"}}>{submissionAnalysis.collaborationEvidence}</div></div>
-          <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Individual Contribution</div><div style={{fontSize:"13px"}}>{submissionAnalysis.individualContributionQuality}</div></div>
-        </div>
-        <div className="card">
-          <div className="card-header"><span className="card-title">Citation Check</span></div>
-          <div style={{marginBottom:"12px"}}><span className={`badge ${submissionAnalysis.missingCitations ? "badge-red" : "badge-green"}`}>{submissionAnalysis.missingCitations ? "MISSING CITATIONS" : "CITATIONS OK"}</span></div>
-          <div style={{fontSize:"13px",color:"var(--text-secondary)"}}>{submissionAnalysis.citationIssue}</div>
-        </div>
-        <div className="card">
-          <div className="card-header"><span className="card-title">Suggested Feedback</span></div>
-          <div style={{fontSize:"14px",marginBottom:"12px"}}>{submissionAnalysis.suggestedFeedback}</div>
-          <div style={{marginTop:"12px",padding:"12px",background:"var(--yellow-bg)",borderRadius:"6px"}}>
-            <div style={{fontSize:"12px",color:"var(--yellow)",fontWeight:600,marginBottom:"4px"}}>HUMAN REVIEW REQUIRED</div>
-            <div style={{fontSize:"13px"}}>{submissionAnalysis.humanReviewReason}</div>
+          <div className="card__header"><span className="card__title">Risk Assessment</span></div>
+          <div style={{marginBottom:"16px"}}>
+            <div className="eyebrow" style={{marginBottom:"6px"}}>AI-Generated Content Risk</div>
+            <span className="tag tag--red">{submissionAnalysis.aiGeneratedContentRisk} — RISK SIGNAL</span>
           </div>
+          <div style={{marginBottom:"16px"}}>
+            <div className="eyebrow" style={{marginBottom:"6px"}}>Collaboration Evidence</div>
+            <div className="p">{submissionAnalysis.collaborationEvidence}</div>
+          </div>
+          <div>
+            <div className="eyebrow" style={{marginBottom:"6px"}}>Individual Contribution</div>
+            <div className="p">{submissionAnalysis.individualContributionQuality}</div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card__header"><span className="card__title">Citation Check</span></div>
+          <div style={{marginBottom:"12px"}}>
+            <span className={`tag ${submissionAnalysis.missingCitations?"tag--red":"tag--green"}`}>
+              {submissionAnalysis.missingCitations?"MISSING CITATIONS":"CITATIONS OK"}
+            </span>
+          </div>
+          <div className="p">{submissionAnalysis.citationIssue}</div>
+        </div>
+
+        <div className="card">
+          <div className="card__header"><span className="card__title">Suggested Feedback</span></div>
+          <div className="p" style={{marginBottom:"12px"}}>{submissionAnalysis.suggestedFeedback}</div>
+          {submissionAnalysis.humanReviewRequired&&(
+            <div className="sub-review-flag">⚠ Human Review Required: {submissionAnalysis.humanReviewReason}</div>
+          )}
         </div>
       </div>
     </div>
   );
 
-  const renderHITL = () => (
-    <div>
-      <div className="page-header">
-        <h1 className="page-title">HITL Intervention Queue</h1>
-        <p className="page-subtitle">Professor-ordered action queue — all cases require HITL approval before intervention</p>
+  /* ── HITL Queue ──────────────────────────────────────────── */
+  const HITL = () => (
+       <div>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>HITL Intervention Queue</h1>
+        <p className="p">Professor-ordered action queue — HITL approval required before any intervention</p>
       </div>
-      <div className="grid-3 mb-4">
-        <div className="stat-card" style={{borderLeft:"4px solid var(--red)"}}>
-          <div className="stat-label">Red — Immediate Review</div>
-          <div className="stat-value text-red">{hitlQueue.filter(q => q.level === "red").length}</div>
-        </div>
-        <div className="stat-card" style={{borderLeft:"4px solid var(--yellow)"}}>
-          <div className="stat-label">Yellow — Monitor / Nudge</div>
-          <div className="stat-value text-yellow">{hitlQueue.filter(q => q.level === "yellow").length}</div>
-        </div>
-        <div className="stat-card" style={{borderLeft:"4px solid var(--green)"}}>
-          <div className="stat-label">Green — No Action</div>
-          <div className="stat-value text-green">{hitlQueue.filter(q => q.level === "green").length}</div>
-        </div>
+
+      <div className="grid-3 sp-4">
+        {(["red","amber","green"] as const).map(lvl=>(
+          <div key={lvl} className="stat-card" style={{borderLeft:`3px solid ${lvl==="red"?"var(--red)":lvl==="amber"?"var(--amber)":"var(--green)"}`}}>
+            <div className="stat-card__eyebrow">{lvl==="red"?"Immediate Review":lvl==="amber"?"Monitor / Nudge":"No Action"}</div>
+            <div className="stat-card__value" style={{color:lvl==="red"?"var(--red)":lvl==="amber"?"var(--amber)":"var(--green)"}}>{hitlQueue.filter(q=>q.level===lvl).length}</div>
+          </div>
+        ))}
       </div>
-      {["red","yellow","green"].map(level => (
-        <div key={level} className="mb-4">
-          {hitlQueue.filter(q => q.level === level).map(item => (
-            <div key={item.id} className={`queue-item ${level}`}>
-              <div className="queue-header">
-                <span className="queue-title">{item.team}</span>
-                <span className={`badge badge-${level}`}>{level.toUpperCase()}</span>
+
+      {(["red","amber","green"] as const).map(lvl=>(
+        <div key={lvl} className="sp-3">
+          {hitlQueue.filter(q=>q.level===lvl).map(item=>(
+            <div key={item.id} className={`queue-item queue-item--${lvl}`}>
+              <div className="queue-item__head">
+                <span className="queue-item__name">{item.team}</span>
+                <span className={`tag tag--${lvl}`}>{lvl.toUpperCase()}</span>
               </div>
-              <div className="queue-reason">Why flagged: {item.reason}</div>
-              <div className="queue-action">Professor action: {item.action}</div>
+              <div className="queue-item__why">Why flagged: {item.reason}</div>
+              <div className="queue-item__do">Professor action: {item.action}</div>
             </div>
           ))}
         </div>
@@ -276,108 +338,80 @@ export default function Home() {
     </div>
   );
 
-  const renderDebrief = () => (
+  /* ── Debrief ──────────────────────────────────────────────── */
+  const Debrief = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Daily Debrief Generator</h1>
-        <p className="page-subtitle">Day 3 analysis — AI-native course operations signal summary</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>Daily Debrief</h1>
+        <p className="p">Day 3 operations analysis — AI Native Week</p>
       </div>
-      <div className="debrief-section">
-        <div className="debrief-title">What Worked Today</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.whatWorkedToday.map((item, i) => <li key={i}>{item}</li>)}</ul>
+
+      {[
+        {title:"What Worked Today",          body:dailyDebrief.whatWorkedToday},
+        {title:"What Did Not Work Today",    body:dailyDebrief.whatDidNotWorkToday},
+        {title:"Blocked Teams",              body:dailyDebrief.blockedTeams},
+        {title:"Underused Materials",        body:dailyDebrief.underusedMaterials},
+        {title:"Confusing Tools",            body:dailyDebrief.confusingTools},
+        {title:"Adjustments for Tomorrow",  body:dailyDebrief.adjustmentsForTomorrow},
+      ].map(({title,body})=>(
+        <div key={title} className="debrief-item">
+          <div className="debrief-item__title">{title}</div>
+          <div className="debrief-item__body">
+            <ul>{body.map((item,i)=><li key={i}>{item}</li>)}</ul>
+          </div>
         </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">What Did Not Work Today</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.whatDidNotWorkToday.map((item, i) => <li key={i}>{item}</li>)}</ul>
-        </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">Blocked Teams</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.blockedTeams.map((item, i) => <li key={i}>{item}</li>)}</ul>
-        </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">Underused Materials</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.underusedMaterials.map((item, i) => <li key={i}>{item}</li>)}</ul>
-        </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">Confusing Tools</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.confusingTools.map((item, i) => <li key={i}>{item}</li>)}</ul>
-        </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">Adjustments for Tomorrow</div>
-        <div className="debrief-content">
-          <ul>{dailyDebrief.adjustmentsForTomorrow.map((item, i) => <li key={i}>{item}</li>)}</ul>
-        </div>
-      </div>
-      <div className="debrief-section">
-        <div className="debrief-title">Suggested Google Classroom Announcement</div>
-        <div className="announcement-box">{dailyDebrief.suggestedAnnouncement}</div>
+      ))}
+
+      <div className="debrief-item">
+        <div className="debrief-item__title">Suggested Google Classroom Announcement</div>
+        <div className="debrief-announce">{dailyDebrief.suggestedAnnouncement}</div>
       </div>
     </div>
   );
 
-  const renderWorkflow = () => (
+  /* ── Workflow ─────────────────────────────────────────────── */
+  const Workflow = () => (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">System Architecture</h1>
-        <p className="page-subtitle">How the professor cockpit processes inputs and generates signals</p>
+      <div className="sp-4">
+        <h1 className="h1" style={{marginBottom:"4px"}}>System Architecture</h1>
+        <p className="p">How the professor cockpit processes inputs and generates signals</p>
       </div>
-      <div className="workflow-diagram">
-        <div className="workflow-section">
-          <div className="workflow-section-title">Inputs</div>
-          <div className="workflow-items">
-            {workflowArchitecture.inputs.map(item => <div key={item} className="workflow-item">{item}</div>)}
+
+      <div className="card">
+        {[
+          {label:"Inputs",        cls:"arch-chip--in",   chips:workflowArchitecture.inputs},
+          {label:"Processing",    cls:"arch-chip--proc", chips:workflowArchitecture.processing},
+          {label:"Outputs",       cls:"arch-chip--out",  chips:workflowArchitecture.outputs},
+        ].map(({label,cls,chips})=>(
+          <div key={label} className="arch-section">
+            <div className="arch-label">{label}</div>
+            <div className="arch-chips">{chips.map(c=><div key={c} className={`arch-chip ${cls}`}>{c}</div>)}</div>
           </div>
-        </div>
-        <div className="section-divider" />
-        <div className="workflow-section">
-          <div className="workflow-section-title">Processing</div>
-          <div className="workflow-items">
-            {workflowArchitecture.processing.map(item => <div key={item} className="workflow-item">{item}</div>)}
-          </div>
-        </div>
-        <div className="section-divider" />
-        <div className="workflow-section">
-          <div className="workflow-section-title">Outputs</div>
-          <div className="workflow-items">
-            {workflowArchitecture.outputs.map(item => <div key={item} className="workflow-item">{item}</div>)}
-          </div>
-        </div>
+        ))}
       </div>
-      <div className="card mt-4">
-        <div className="card-header"><span className="card-title">HITL Principle</span></div>
-        <div style={{fontSize:"14px",color:"var(--text-secondary)",lineHeight:1.7}}>
-          The professor approves all final feedback, grading decisions, risk judgments, and student interventions. 
+
+      <div className="card sp-3">
+        <div className="card__header"><span className="card__title">HITL Principle</span></div>
+        <p className="p" style={{lineHeight:1.8}}>
+          The professor approves all final feedback, grading decisions, risk judgments, and student interventions.
           AI-generated analysis is a decision-support signal only. The professor remains the final evaluator of all student work.
-        </div>
+        </p>
       </div>
     </div>
   );
+
+  const screens = { overview:Overview, students:Students, teams:Teams, framework:Framework, submission:Submission, hitl:HITL, debrief:Debrief, workflow:Workflow };
+  const Screen = screens[scr];
 
   return (
-    <div>
-      <div style={{background:"linear-gradient(90deg, #7c3aed, #a855f7, #c084fc)",color:"white",textAlign:"center",padding:"10px 16px",fontSize:"13px",fontWeight:600,letterSpacing:"0.5px"}}>
-        PROTOTYPE MODE: Synthetic anonymized data only — No real student or Google Classroom data
-      </div>
-      {renderNav()}
-      <main className="main-content">
-        {screen === "overview" && renderOverview()}
-        {screen === "students" && renderStudents()}
-        {screen === "teams" && renderTeams()}
-        {screen === "framework" && renderFramework()}
-        {screen === "submission" && renderSubmission()}
-        {screen === "hitl" && renderHITL()}
-        {screen === "debrief" && renderDebrief()}
-        {screen === "workflow" && renderWorkflow()}
+    <div className="app-wrap">
+      <header className="top-bar">
+        <span className="top-bar__wordmark">AI Native Week</span>
+        <span className="top-bar__tag">Prototype Mode — Synthetic Data</span>
+      </header>
+      <main className="page-main">
+        <Nav />
+        <Screen />
       </main>
     </div>
   );
