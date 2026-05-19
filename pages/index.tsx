@@ -219,7 +219,7 @@ export default function Home() {
         <div className="card">
           <div className="card-header"><span className="card-title">Risk Assessment</span></div>
           <div style={{marginBottom:"12px"}}><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>AI-Generated Content Risk</div><span className="badge badge-red">{submissionAnalysis.aiGeneratedContentRisk} — RISK SIGNAL</span></div>
-          <div style={{marginBottom:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Collaboration Evidence</div><div style={{fontSize:"13px"}}>{submissionAnalysis.collaborationEvidence}</div></div>
+          <div style={{marginBottom:"12px"}}><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Collaboration Evidence</div><div style={{fontSize:"13px"}}>{submissionAnalysis.collaborationEvidence}</div></div>
           <div><div style={{fontSize:"12px",color:"var(--text-muted)",marginBottom:"4px"}}>Individual Contribution</div><div style={{fontSize:"13px"}}>{submissionAnalysis.individualContributionQuality}</div></div>
         </div>
         <div className="card">
