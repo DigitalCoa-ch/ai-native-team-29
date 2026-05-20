@@ -35,7 +35,7 @@ const IconAlert = () => <svg viewBox="0 0 16 16" fill="none" stroke="currentColo
 
 // ── Shared tooltip ──
 const CTip = ({ active, payload, label }: any) => active && payload?.length ? (
-  <div style={{ background:"var(--surface)", border:"1px solid var(--rule)", borderRadius:6, padding:"8px 14px", fontSize:12, lineHeight:1.7, boxShadow:"0 4px 16px rgba(0,0,0,0.1)" }}>
+  <div style={{ background:"#FFFFFF", border:"1px solid #E4E7EF", borderRadius:6, padding:"8px 14px", fontSize:12, lineHeight:1.7, boxShadow:"0 4px 16px rgba(0,0,0,0.1)" }}>
     <strong style={{ display:"block", marginBottom:4 }}>{label}</strong>
     {payload.map((p: any) => <div key={p.name} style={{ color: p.color||p.fill }}>{p.name}: <strong>{p.value}</strong></div>)}
   </div>) : null;
@@ -98,9 +98,13 @@ function useContainerWidth(ref: React.RefObject<HTMLDivElement>) {
   const [width, setWidth] = useState(0);
   useEffect(() => {
     if (!ref.current) return;
+    // Use ResizeObserver for live updates
     const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
     observer.observe(ref.current);
-    setWidth(ref.current.offsetWidth);
+    // Fallback: read offsetWidth immediately in case ResizeObserver hasn't fired yet
+    // (important for SSR → client hydration where first frame may have stale 0)
+    const initial = ref.current.offsetWidth;
+    if (initial > 0) setWidth(initial);
     return () => observer.disconnect();
   }, []);
   return width;
@@ -133,7 +137,7 @@ function Overview() {
         <p className="screen-sub">AI Native Enterprise Week — Day 3 of 4 &nbsp;·&nbsp; Active monitoring</p>
         <div className="screen-meta">
           <span className="proto-badge">Prototype Mode: Synthetic anonymized data</span>
-          <span style={{fontSize:11,color:"var(--ink-3)"}}>Last updated: today at 08:45</span>
+          <span style={{fontSize:11,color:"#9CA3AF"}}>Last updated: today at 08:45</span>
         </div>
       </div>
 
@@ -293,12 +297,12 @@ function Overview() {
             {fw:"HITL Pattern", status:"amber", desc:"3 teams need clarification", detail:"Review frequency not specified"},
             {fw:"Governance", status:"red", desc:"Only 2 teams have audit trail", detail:"Highest risk area for Day 4"},
           ].map(f => (
-            <div key={f.fw} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"10px 0",borderBottom:"1px solid var(--rule-light)"}}>
-              <div style={{width:8,height:8,borderRadius:"50%",flexShrink:0,marginTop:4,background:f.status==="red"?"var(--red)":f.status==="amber"?"var(--amber)":f.status==="green"?"var(--green)":"var(--blue)"}}/>
+            <div key={f.fw} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
+              <div style={{width:8,height:8,borderRadius:"50%",flexShrink:0,marginTop:4,background:f.status==="red"?"#DC2626":f.status==="amber"?"#D97706":f.status==="green"?"#059669":"#2563EB"}}/>
               <div style={{flex:1}}>
                 <div style={{fontSize:12,fontWeight:700,marginBottom:2}}>{f.fw}</div>
-                <div style={{fontSize:11,color:"var(--ink-2)"}}>{f.desc}</div>
-                <div style={{fontSize:10,color:"var(--ink-3)",marginTop:2}}>{f.detail}</div>
+                <div style={{fontSize:11,color:"#4B5563"}}>{f.desc}</div>
+                <div style={{fontSize:10,color:"#9CA3AF",marginTop:2}}>{f.detail}</div>
               </div>
               <span className={`badge badge-${f.status === "red" ? "red" : f.status === "amber" ? "amber" : f.status === "green" ? "green" : "blue"}`}>{f.status === "red" ? "Risk" : f.status === "amber" ? "Monitor" : f.status === "green" ? "Clear" : "OK"}</span>
             </div>
@@ -334,16 +338,16 @@ function Overview() {
             <span className="badge badge-red">4 Required</span>
           </div>
           {[
-            {l:"AI-Risk Review", v:"4 cases", c:"var(--red)"},
-            {l:"Late Submission Grace", v:"8 cases", c:"var(--amber)"},
-            {l:"Missing Citations", v:"3 cases", c:"var(--blue)"},
+            {l:"AI-Risk Review", v:"4 cases", c:"#DC2626"},
+            {l:"Late Submission Grace", v:"8 cases", c:"#D97706"},
+            {l:"Missing Citations", v:"3 cases", c:"#2563EB"},
           ].map(x => (
-            <div key={x.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",background:"var(--surface-2)",borderRadius:6,borderLeft:`3px solid ${x.c}`,marginBottom:8}}>
+            <div key={x.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",background:"#F8F9FC",borderRadius:6,borderLeft:`3px solid ${x.c}`,marginBottom:8}}>
               <span style={{fontSize:12,fontWeight:600}}>{x.l}</span>
               <span style={{fontSize:12,fontWeight:700,color:x.c}}>{x.v}</span>
             </div>
           ))}
-          <p style={{fontSize:11,color:"var(--ink-3)",marginTop:12}}>All decisions require professor approval before feedback is sent.</p>
+          <p style={{fontSize:11,color:"#9CA3AF",marginTop:12}}>All decisions require professor approval before feedback is sent.</p>
         </div>
       </div>
     </div>
@@ -392,7 +396,7 @@ function Students() {
                 <tr key={s.id} className="exp-row" onClick={()=>setExpanded(expanded===s.id?null:s.id)} style={{cursor:"pointer"}}>
                   <td>
                     <div style={{fontWeight:700,fontSize:13}}>{s.name}</div>
-                    <div style={{fontSize:10,color:"var(--ink-3)"}}>{s.id}</div>
+                    <div style={{fontSize:10,color:"#9CA3AF"}}>{s.id}</div>
                   </td>
                   <td><StatusBadge s={s.status}/></td>
                   <td>
@@ -417,18 +421,18 @@ function Students() {
                     {s.contributionQuality==="Medium"&&<span className="badge badge-amber">Medium</span>}
                     {s.contributionQuality==="Low"&&<span className="badge badge-red">Low</span>}
                   </td>
-                  <td><span style={{fontSize:11,fontWeight:600,color:s.status==="red"?"var(--red)":s.status==="yellow"?"var(--amber)":"var(--green)"}}>{s.action}</span></td>
+                  <td><span style={{fontSize:11,fontWeight:600,color:s.status==="red"?"#DC2626":s.status==="yellow"?"#D97706":"#059669"}}>{s.action}</span></td>
                 </tr>
                 {expanded===s.id&&(
                   <tr>
-                    <td colSpan={7} className="exp-detail" style={{background:"var(--surface-2)"}}>
+                    <td colSpan={7} className="exp-detail" style={{background:"#F8F9FC"}}>
                       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
-                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"var(--ink-3)",marginBottom:4}}>Missing Assignments</div><div style={{fontSize:20,fontWeight:900}}>{s.missing}</div></div>
-                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"var(--ink-3)",marginBottom:4}}>Late Submissions</div><div style={{fontSize:20,fontWeight:900}}>{s.late}</div></div>
-                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"var(--ink-3)",marginBottom:4}}>Materials Use</div><div style={{fontSize:20,fontWeight:900}}>{s.materialsOpened}%</div></div>
-                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"var(--ink-3)",marginBottom:4}}>AI Risk Level</div><div style={{fontSize:20,fontWeight:900}}>{s.aiRisk}</div></div>
+                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Missing Assignments</div><div style={{fontSize:20,fontWeight:900}}>{s.missing}</div></div>
+                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Late Submissions</div><div style={{fontSize:20,fontWeight:900}}>{s.late}</div></div>
+                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Materials Use</div><div style={{fontSize:20,fontWeight:900}}>{s.materialsOpened}%</div></div>
+                        <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>AI Risk Level</div><div style={{fontSize:20,fontWeight:900}}>{s.aiRisk}</div></div>
                       </div>
-                      <div style={{marginTop:10,fontSize:12,color:"var(--ink-2)"}}><strong style={{color:"var(--indigo)"}}>Professor recommended action:</strong> {s.action}</div>
+                      <div style={{marginTop:10,fontSize:12,color:"#4B5563"}}><strong style={{color:"#4338CA"}}>Professor recommended action:</strong> {s.action}</div>
                     </td>
                   </tr>
                 )}
@@ -501,10 +505,10 @@ function Teams() {
                 </div>
               </div>
               <div style={{marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"var(--ink-3)",marginBottom:6}}>Why {getReadinessLabel(score)}</div>
-                {score >= 75 && <div style={{fontSize:11,color:"var(--green)"}}>Strong scores across all dimensions. Oxygen Test passed. Workflow and HITL defined.</div>}
-                {score >= 55 && score < 75 && <div style={{fontSize:11,color:"var(--amber)"}}>Solid foundation. Governance or HITL gaps remain. Conditionally passed Oxygen Test.</div>}
-                {score < 55 && <div style={{fontSize:11,color:"var(--red)"}}>Oxygen Test failed or borderline. Multiple gaps in problem framing, AI-native argument weak.</div>}
+                <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:6}}>Why {getReadinessLabel(score)}</div>
+                {score >= 75 && <div style={{fontSize:11,color:"#059669"}}>Strong scores across all dimensions. Oxygen Test passed. Workflow and HITL defined.</div>}
+                {score >= 55 && score < 75 && <div style={{fontSize:11,color:"#D97706"}}>Solid foundation. Governance or HITL gaps remain. Conditionally passed Oxygen Test.</div>}
+                {score < 55 && <div style={{fontSize:11,color:"#DC2626"}}>Oxygen Test failed or borderline. Multiple gaps in problem framing, AI-native argument weak.</div>}
               </div>
               <div className={`team-action ${color === "green" ? "blue" : color}`}>
                 <span style={{fontSize:11,fontWeight:700,marginRight:6,textTransform:"uppercase",letterSpacing:".06em"}}>→</span>
@@ -528,7 +532,7 @@ function Framework() {
       <div className="screen-header">
         <h1 className="screen-title">Framework Analyzer</h1>
         <p className="screen-sub">What the professor sees: AI reasoning support across all framework dimensions. The system analyzes; the professor decides.</p>
-        <p className="screen-sub" style={{marginTop:6,color:"var(--indigo)",fontWeight:600}}>AI reasoning support — professor decides</p>
+        <p className="screen-sub" style={{marginTop:6,color:"#4338CA",fontWeight:600}}>AI reasoning support — professor decides</p>
       </div>
 
       <NarrativeBar />
@@ -582,8 +586,8 @@ function Submission() {
             {l:"Student", v:"Student Gamma (S003)"}, {l:"Team", v:"T03 — Project Cipher"}, {l:"Submitted", v:"Late — Day 3, 11:47 PM"},
             {l:"Assignment", v:"Day 3 Workflow Document"}, {l:"Completeness", v:"75%"},
           ].map(r => (
-            <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid var(--rule-light)",fontSize:12}}>
-              <span style={{color:"var(--ink-3)",fontWeight:600}}>{r.l}</span>
+            <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #F0F2F8",fontSize:12}}>
+              <span style={{color:"#9CA3AF",fontWeight:600}}>{r.l}</span>
               <span style={{fontWeight:700}}>{r.v}</span>
             </div>
           ))}
@@ -608,11 +612,11 @@ function Submission() {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"var(--sp3)",marginBottom:"var(--sp3)"}}>
         <div className="card">
           <div className="card-head"><span className="card-title">Collaboration Evidence</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"var(--ink-2)"}}>{submissionAnalysis.collaborationEvidence}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>{submissionAnalysis.collaborationEvidence}</div>
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Individual Contribution</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"var(--ink-2)"}}>{submissionAnalysis.individualContributionQuality}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>{submissionAnalysis.individualContributionQuality}</div>
         </div>
       </div>
 
@@ -622,26 +626,26 @@ function Submission() {
           <div style={{marginBottom:10}}>
             <span className="badge badge-amber" style={{fontSize:12,padding:"4px 12px"}}>{submissionAnalysis.aiGeneratedContentRisk}</span>
           </div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"var(--ink-2)"}}>Rapid generation signals detected in workflow section. Governance section lacks depth typical of human-authored content.</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>Rapid generation signals detected in workflow section. Governance section lacks depth typical of human-authored content.</div>
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Source / Citation Quality</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"var(--ink-2)",marginBottom:10}}>{submissionAnalysis.citationIssue}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563",marginBottom:10}}>{submissionAnalysis.citationIssue}</div>
           <div className="flag">⚠ Missing citations — human review required</div>
         </div>
       </div>
 
       <div className="card sp3">
         <div className="card-head"><span className="card-title">Suggested Feedback</span></div>
-        <div style={{fontSize:12,lineHeight:1.8,color:"var(--ink-2)"}}>{submissionAnalysis.suggestedFeedback}</div>
+        <div style={{fontSize:12,lineHeight:1.8,color:"#4B5563"}}>{submissionAnalysis.suggestedFeedback}</div>
       </div>
 
       <div className="card" style={{border:"2px solid var(--red-border)",background:"var(--red-light)"}}>
         <div style={{display:"flex",alignItems:"center",gap:12,padding:"var(--sp3)"}}>
           <IconAlert />
           <div>
-            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"var(--red)"}}>Human Review Required</div>
-            <div style={{fontSize:12,color:"var(--ink-2)"}}>{submissionAnalysis.humanReviewReason}</div>
+            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#DC2626"}}>Human Review Required</div>
+            <div style={{fontSize:12,color:"#4B5563"}}>{submissionAnalysis.humanReviewReason}</div>
           </div>
         </div>
       </div>
@@ -669,15 +673,15 @@ function Hitl() {
       <div className="grid-3 sp6">
         <div className="card" style={{borderTop:"3px solid var(--red)"}}>
           <div className="card-head"><span className="card-title">Immediate Review</span><span className="badge badge-red">{redItems.length}</span></div>
-          <div style={{fontSize:11,color:"var(--ink-2)"}}>AI-risk signals, failed Oxygen Tests, and academic integrity concerns. Must act today.</div>
+          <div style={{fontSize:11,color:"#4B5563"}}>AI-risk signals, failed Oxygen Tests, and academic integrity concerns. Must act today.</div>
         </div>
         <div className="card" style={{borderTop:"3px solid var(--amber)"}}>
           <div className="card-head"><span className="card-title">Monitor</span><span className="badge badge-amber">{amberItems.length}</span></div>
-          <div style={{fontSize:11,color:"var(--ink-2)"}}>Borderline cases, declining engagement, incomplete sections. Nudge recommended.</div>
+          <div style={{fontSize:11,color:"#4B5563"}}>Borderline cases, declining engagement, incomplete sections. Nudge recommended.</div>
         </div>
         <div className="card" style={{borderTop:"3px solid var(--green)"}}>
           <div className="card-head"><span className="card-title">No Action Needed</span><span className="badge badge-green">{greenItems.length}</span></div>
-          <div style={{fontSize:11,color:"var(--ink-2)"}}>On track. Confirm presentation slots. Consider as peer examples.</div>
+          <div style={{fontSize:11,color:"#4B5563"}}>On track. Confirm presentation slots. Consider as peer examples.</div>
         </div>
       </div>
 
@@ -760,18 +764,18 @@ function Debrief() {
         <div className="card">
           <div className="card-head"><span className="card-title">Blocked Teams</span><span className="badge badge-red">2</span></div>
           {dailyDebrief.blockedTeams.map((t,i) => (
-            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid var(--rule-light)"}}>
-              <div style={{fontSize:12,fontWeight:700,color:"var(--red)",marginBottom:4}}>{t.split(":")[0]}</div>
-              <div style={{fontSize:11,color:"var(--ink-2)"}}>{t.split(":").slice(1).join(":").trim()}</div>
+            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
+              <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:4}}>{t.split(":")[0]}</div>
+              <div style={{fontSize:11,color:"#4B5563"}}>{t.split(":").slice(1).join(":").trim()}</div>
             </div>
           ))}
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Underused Materials</span><span className="badge badge-amber">3</span></div>
           {dailyDebrief.underusedMaterials.map((m,i) => (
-            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid var(--rule-light)"}}>
+            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
               <div style={{fontSize:12,fontWeight:600,marginBottom:4}}>{m.split("(")[0].trim()}</div>
-              <div style={{fontSize:11,color:"var(--ink-3)"}}>{m.split("(")[1]?.replace(")","") || ""}</div>
+              <div style={{fontSize:11,color:"#9CA3AF"}}>{m.split("(")[1]?.replace(")","") || ""}</div>
             </div>
           ))}
         </div>
@@ -806,7 +810,7 @@ function Workflow() {
       <div className="screen-header">
         <h1 className="screen-title">Workflow Architecture</h1>
         <p className="screen-sub">What the professor sees: how student work flows through the system — from input signals to professor decisions.</p>
-        <p className="screen-sub" style={{marginTop:6,color:"var(--indigo)",fontWeight:700}}>The system recommends. The professor decides.</p>
+        <p className="screen-sub" style={{marginTop:6,color:"#4338CA",fontWeight:700}}>The system recommends. The professor decides.</p>
       </div>
 
       <NarrativeBar />
@@ -814,7 +818,7 @@ function Workflow() {
       <div className="card sp4" style={{border:"2px solid var(--indigo-border)",background:"var(--indigo-light)"}}>
         <div style={{display:"flex",alignItems:"center",gap:12,padding:"var(--sp2) var(--sp3)"}}>
           <IconAlert />
-          <div style={{fontSize:12,fontWeight:600,color:"var(--indigo)"}}>
+          <div style={{fontSize:12,fontWeight:600,color:"#4338CA"}}>
             HITL = Human-in-the-Loop. Every flagged signal goes to the professor for a decision. The system never grades or dismisses a risk signal autonomously.
           </div>
         </div>
@@ -844,12 +848,12 @@ function Workflow() {
         <div className="wf-col" style={{borderTop:"3px solid var(--indigo)"}}>
           <div className="wf-col-title">
             <span>Human-in-the-Loop</span>
-            <span className="wf-count" style={{background:"var(--indigo-light)",color:"var(--indigo)"}}>HITL</span>
+            <span className="wf-count" style={{background:"var(--indigo-light)",color:"#4338CA"}}>HITL</span>
           </div>
-          <div style={{fontSize:11,color:"var(--indigo)",fontWeight:700,marginBottom:8,padding:"8px 10px",background:"var(--indigo-light)",borderRadius:6}}>
+          <div style={{fontSize:11,color:"#4338CA",fontWeight:700,marginBottom:8,padding:"8px 10px",background:"var(--indigo-light)",borderRadius:6}}>
             Professor reviews and approves all flagged items
           </div>
-          <div style={{fontSize:10,color:"var(--ink-3)",lineHeight:1.6}}>AI-risk signals, late submissions, Oxygen Test failures, academic integrity concerns</div>
+          <div style={{fontSize:10,color:"#9CA3AF",lineHeight:1.6}}>AI-risk signals, late submissions, Oxygen Test failures, academic integrity concerns</div>
         </div>
         <div className="wf-arrow">→</div>
         <div className="wf-col wf-col-ou">
@@ -865,8 +869,8 @@ function Workflow() {
 
       <div className="card">
         <div className="card-head"><span className="card-title">HITL Key Principle</span></div>
-        <div style={{fontSize:14,fontWeight:800,color:"var(--ink)",marginBottom:8}}>The system recommends. The professor decides.</div>
-        <div style={{fontSize:12,color:"var(--ink-2)",lineHeight:1.7}}>
+        <div style={{fontSize:14,fontWeight:800,color:"#111827",marginBottom:8}}>The system recommends. The professor decides.</div>
+        <div style={{fontSize:12,color:"#4B5563",lineHeight:1.7}}>
           This cockpit is an AI-assisted decision support system — not an autonomous grading system. Every risk signal, every intervention recommendation, and every flagged submission requires professor sign-off before any student-facing action is taken. The AI surfaces patterns; the professor owns the judgment.
         </div>
       </div>
