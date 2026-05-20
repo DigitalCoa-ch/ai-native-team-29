@@ -110,6 +110,12 @@ function useContainerWidth(ref: React.RefObject<HTMLDivElement>, fallback = 400)
   return width;
 }
 
+function useMounted(delayMs = 100) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setMounted(true), delayMs); return () => clearTimeout(t); }, []);
+  return mounted;
+}
+
 function Overview() {
   const chart1Ref = useRef<HTMLDivElement>(null);
   const chart2Ref = useRef<HTMLDivElement>(null);
@@ -117,6 +123,7 @@ function Overview() {
   const chart2Width = useContainerWidth(chart2Ref);
   const chart3Ref = useRef<HTMLDivElement>(null);
   const chart3Width = useContainerWidth(chart3Ref);
+  const chartsMounted = useMounted(150);
   const redStudents = students.filter(s => s.status === "red").length;
   const amberStudents = students.filter(s => s.status === "yellow").length;
   const greenStudents = students.filter(s => s.status === "green").length;
@@ -242,7 +249,7 @@ function Overview() {
             <span className="card-sub">% submitted on time</span>
           </div>
           <div style={{height:180}}>
-            {chart1Width > 0 && (
+            {chartsMounted && chart1Width > 0 && (
               <ResponsiveContainer width={chart1Width} height={180}>
                 <AreaChart data={completionTrend}>
                   <defs>
@@ -267,7 +274,7 @@ function Overview() {
             <span className="card-sub">80 active</span>
           </div>
           <div ref={chart2Ref} style={{display:"flex",alignItems:"center",gap:16}}>
-            {chart2Width > 0 && (
+            {chartsMounted && chart2Width > 0 && (
               <ResponsiveContainer width={Math.min(120, chart2Width * 0.4)} height={120}>
                 <PieChart>
                   <Pie data={statusDist} cx="50%" cy="50%" innerRadius={34} outerRadius={54} dataKey="value" stroke="none">
@@ -382,7 +389,7 @@ function Overview() {
             <span className="card-sub">Overall score + Oxygen Test</span>
           </div>
           <div ref={chart3Ref} style={{height:200}}>
-            {chart3Width > 0 && (
+            {chartsMounted && chart3Width > 0 && (
               <ResponsiveContainer width={chart3Width} height={200}>
                 <BarChart data={teamScoresChart} barCategoryGap="28%">
                   <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EF" vertical={false}/>
