@@ -94,19 +94,19 @@ const OxygenBadge = ({ o }: { o: string }) => {
 
 // ── SCREEN: Overview ──
 // ── Resize hook for charts ──
-function useContainerWidth(ref: React.RefObject<HTMLDivElement>) {
-  const [width, setWidth] = useState(0);
+function useContainerWidth(ref: React.RefObject<HTMLDivElement>, fallback = 400) {
+  const [width, setWidth] = useState(fallback);
   useEffect(() => {
     if (!ref.current) return;
-    // Use ResizeObserver for live updates
-    const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    const update = () => {
+      const w = ref.current ? ref.current.offsetWidth : fallback;
+      setWidth(w > 0 ? w : fallback);
+    };
+    update(); // run immediately to capture real width
+    const observer = new ResizeObserver(() => update());
     observer.observe(ref.current);
-    // Fallback: read offsetWidth immediately in case ResizeObserver hasn't fired yet
-    // (important for SSR → client hydration where first frame may have stale 0)
-    const initial = ref.current.offsetWidth;
-    if (initial > 0) setWidth(initial);
     return () => observer.disconnect();
-  }, []);
+  }, [fallback]);
   return width;
 }
 
