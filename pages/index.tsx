@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, AreaChart, Area
@@ -93,7 +93,26 @@ const OxygenBadge = ({ o }: { o: string }) => {
 };
 
 // ── SCREEN: Overview ──
+// ── Resize hook for charts ──
+function useContainerWidth(ref: React.RefObject<HTMLDivElement>) {
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    observer.observe(ref.current);
+    setWidth(ref.current.offsetWidth);
+    return () => observer.disconnect();
+  }, []);
+  return width;
+}
+
 function Overview() {
+  const chart1Ref = useRef<HTMLDivElement>(null);
+  const chart2Ref = useRef<HTMLDivElement>(null);
+  const chart1Width = useContainerWidth(chart1Ref);
+  const chart2Width = useContainerWidth(chart2Ref);
+  const chart3Ref = useRef<HTMLDivElement>(null);
+  const chart3Width = useContainerWidth(chart3Ref);
   const redStudents = students.filter(s => s.status === "red").length;
   const amberStudents = students.filter(s => s.status === "yellow").length;
   const greenStudents = students.filter(s => s.status === "green").length;
@@ -149,40 +168,46 @@ function Overview() {
 
       {/* Charts row */}
       <div className="grid-21 sp6">
-        <div className="card">
+        <div ref={chart1Ref} className="card">
           <div className="card-head">
             <span className="card-title">Completion Trend — Days 1–3</span>
             <span className="card-sub">% submitted on time</span>
           </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={completionTrend}>
-              <defs>
-                <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#059669" stopOpacity={0.15}/>
-                  <stop offset="95%" stopColor="#059669" stopOpacity={0.01}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--rule)" vertical={false}/>
-              <XAxis dataKey="day" tick={{fontSize:11,fill:"var(--ink-2)"}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fontSize:11,fill:"var(--ink-2)"}} axisLine={false} tickLine={false} domain={[0,100]} ticks={[0,50,100]}/>
-              <Tooltip content={<CTip/>}/>
-              <Area type="monotone" dataKey="rate" stroke="#059669" strokeWidth={2.5} fill="url(#gGreen)" name="Completed %"/>
-            </AreaChart>
-          </ResponsiveContainer>
+          <div style={{height:180}}>
+            {chart1Width > 0 && (
+              <ResponsiveContainer width={chart1Width} height={180}>
+                <AreaChart data={completionTrend}>
+                  <defs>
+                    <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#059669" stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor="#059669" stopOpacity={0.01}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EF" vertical={false}/>
+                  <XAxis dataKey="day" tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false}/>
+                  <YAxis tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false} domain={[0,100]} ticks={[0,50,100]}/>
+                  <Tooltip content={<CTip/>}/>
+                  <Area type="monotone" dataKey="rate" stroke="#059669" strokeWidth={2.5} fill="url(#gGreen)" name="Completed %"/>
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </div>
         <div className="card">
           <div className="card-head">
             <span className="card-title">Student Risk Distribution</span>
             <span className="card-sub">80 active</span>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:16}}>
-            <ResponsiveContainer width={120} height={120}>
-              <PieChart>
-                <Pie data={statusDist} cx="50%" cy="50%" innerRadius={34} outerRadius={54} dataKey="value" stroke="none">
-                  {statusDist.map((e,i) => <Cell key={i} fill={e.color}/>)}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+          <div ref={chart2Ref} style={{display:"flex",alignItems:"center",gap:16}}>
+            {chart2Width > 0 && (
+              <ResponsiveContainer width={Math.min(120, chart2Width * 0.4)} height={120}>
+                <PieChart>
+                  <Pie data={statusDist} cx="50%" cy="50%" innerRadius={34} outerRadius={54} dataKey="value" stroke="none">
+                    {statusDist.map((e,i) => <Cell key={i} fill={e.color}/>)}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            )}
             <div style={{flex:1}}>
               {statusDist.map(s => (
                 <div key={s.name} style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
@@ -288,16 +313,20 @@ function Overview() {
             <span className="card-title">Team Performance Radar</span>
             <span className="card-sub">Overall score + Oxygen Test</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={teamScoresChart} barCategoryGap="28%">
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--rule)" vertical={false}/>
-              <XAxis dataKey="name" tick={{fontSize:10,fill:"var(--ink-2)"}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fontSize:11,fill:"var(--ink-2)"}} axisLine={false} tickLine={false} domain={[0,100]}/>
-              <Tooltip content={<CTip/>}/>
-              <Bar dataKey="Score" fill="#2563EB" name="Overall Score" radius={[3,3,0,0]} maxBarSize={32}/>
-              <Bar dataKey="Oxygen" fill="#D97706" name="Oxygen Test" radius={[3,3,0,0]} maxBarSize={32}/>
-            </BarChart>
-          </ResponsiveContainer>
+          <div ref={chart3Ref} style={{height:200}}>
+            {chart3Width > 0 && (
+              <ResponsiveContainer width={chart3Width} height={200}>
+                <BarChart data={teamScoresChart} barCategoryGap="28%">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EF" vertical={false}/>
+                  <XAxis dataKey="name" tick={{fontSize:10,fill:"#4B5563"}} axisLine={false} tickLine={false}/>
+                  <YAxis tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false} domain={[0,100]}/>
+                  <Tooltip content={<CTip/>}/>
+                  <Bar dataKey="Score" fill="#2563EB" name="Overall Score" radius={[3,3,0,0]} maxBarSize={32}/>
+                  <Bar dataKey="Oxygen" fill="#D97706" name="Oxygen Test" radius={[3,3,0,0]} maxBarSize={32}/>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </div>
         <div className="card">
           <div className="card-head">
