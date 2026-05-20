@@ -21,6 +21,29 @@ const SCR: Record<Screen,string> = {
   workflow: "Workflow Architecture",
 };
 
+// ── Shared hooks (module level — stable across renders) ──
+function useContainerWidth(ref: React.RefObject<HTMLDivElement>, fallback = 400) {
+  const [width, setWidth] = useState(fallback);
+  useEffect(() => {
+    if (!ref.current) return;
+    const update = () => {
+      const w = ref.current ? ref.current.offsetWidth : fallback;
+      setWidth(w > 0 ? w : fallback);
+    };
+    update();
+    const observer = new ResizeObserver(() => update());
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [fallback]);
+  return width;
+}
+
+function useMounted(delayMs = 150) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setMounted(true), delayMs); return () => clearTimeout(t); }, [delayMs]);
+  return mounted;
+}
+
 // ── SVG Icons ──
 const IconDashboard = () => <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" style={{color:'var(--ink-2, #6B7280)'}}><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>;
 const IconRadar = () => <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" style={{color:'var(--ink-2, #6B7280)'}}><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="3"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>;
@@ -93,29 +116,6 @@ const OxygenBadge = ({ o }: { o: string }) => {
 };
 
 // ── SCREEN: Overview ──
-// ── Resize hook for charts ──
-function useContainerWidth(ref: React.RefObject<HTMLDivElement>, fallback = 400) {
-  const [width, setWidth] = useState(fallback);
-  useEffect(() => {
-    if (!ref.current) return;
-    const update = () => {
-      const w = ref.current ? ref.current.offsetWidth : fallback;
-      setWidth(w > 0 ? w : fallback);
-    };
-    update(); // run immediately to capture real width
-    const observer = new ResizeObserver(() => update());
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [fallback]);
-  return width;
-}
-
-function useMounted(delayMs = 100) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setMounted(true), delayMs); return () => clearTimeout(t); }, []);
-  return mounted;
-}
-
 function Overview() {
   const chart1Ref = useRef<HTMLDivElement>(null);
   const chart2Ref = useRef<HTMLDivElement>(null);
