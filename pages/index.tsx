@@ -242,15 +242,15 @@ function Overview() {
       </div>
 
       {/* Charts row */}
-      <div className="grid-21 sp6">
-        <div ref={chart1Ref} className="card">
+      <div className="chart-row sp6">
+        <div ref={chart1Ref} className="card chart-card">
           <div className="card-head">
             <span className="card-title">Completion Trend — Days 1–3</span>
             <span className="card-sub">% submitted on time</span>
           </div>
-          <div style={{height:180}}>
-            {chartsMounted && chart1Width > 0 && (
-              <ResponsiveContainer width={chart1Width} height={180}>
+          <div className="chart-container">
+            {chartsMounted && chart1Width > 0 ? (
+              <ResponsiveContainer width="100%" height={180}>
                 <AreaChart data={completionTrend}>
                   <defs>
                     <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
@@ -265,7 +265,7 @@ function Overview() {
                   <Area type="monotone" dataKey="rate" stroke="#059669" strokeWidth={2.5} fill="url(#gGreen)" name="Completed %" isAnimationActive={false}/>
                 </AreaChart>
               </ResponsiveContainer>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="card">
@@ -382,15 +382,15 @@ function Overview() {
       </div>
 
       {/* Team performance + HITL */}
-      <div className="grid-21 sp6">
-        <div className="card">
+      <div className="grid-21 sp6" style={{maxWidth:"100%",overflow:"hidden"}}>
+        <div className="card chart-card">
           <div className="card-head">
             <span className="card-title">Team Performance Radar</span>
             <span className="card-sub">Overall score + Oxygen Test</span>
           </div>
-          <div ref={chart3Ref} style={{height:200}}>
-            {chartsMounted && chart3Width > 0 && (
-              <ResponsiveContainer width={chart3Width} height={200}>
+          <div className="chart-container" style={{height:200}}>
+            {chartsMounted && chart3Width > 0 ? (
+              <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={teamScoresChart} barCategoryGap="28%">
                   <CartesianGrid strokeDasharray="3 3" stroke="#E4E4E0" vertical={false}/>
                   <XAxis dataKey="name" tick={{fontSize:10,fill:"#5C5C5C"}} axisLine={false} tickLine={false}/>
@@ -400,7 +400,7 @@ function Overview() {
                   <Bar dataKey="Oxygen" fill="#D97706" name="Oxygen Test" radius={[3,3,0,0]} maxBarSize={32}/>
                 </BarChart>
               </ResponsiveContainer>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="card">
