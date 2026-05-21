@@ -58,7 +58,7 @@ const IconAlert = () => <svg viewBox="0 0 16 16" fill="none" stroke="currentColo
 
 // ── Shared tooltip ──
 const CTip = ({ active, payload, label }: any) => active && payload?.length ? (
-  <div style={{ background:"#FFFFFF", border:"1px solid #E4E7EF", borderRadius:6, padding:"8px 14px", fontSize:12, lineHeight:1.7, boxShadow:"0 4px 16px rgba(0,0,0,0.1)" }}>
+  <div style={{ background:"#FFFFFF", border:"1px solid #E4E4E0", borderRadius:6, padding:"8px 14px", fontSize:12, lineHeight:1.7, boxShadow:"0 4px 16px rgba(0,0,0,0.1)" }}>
     <strong style={{ display:"block", marginBottom:4 }}>{label}</strong>
     {payload.map((p: any) => <div key={p.name} style={{ color: p.color||p.fill }}>{p.name}: <strong>{p.value}</strong></div>)}
   </div>) : null;
@@ -185,12 +185,12 @@ function Overview() {
         </div>
         <div className="grid-3">
           {/* Rescue Now */}
-          <div style={{borderTop:"3px solid #DC2626",padding:"var(--sp3)",borderRadius:6,background:"#FEF2F2"}}>
+          <div style={{borderTop:"3px solid #DC2626",padding:"var(--sp3)",borderRadius:6,background:"#FBF0F1"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
               <span style={{fontSize:9,fontWeight:800,letterSpacing:".12em",textTransform:"uppercase",color:"#DC2626"}}>🔴 Rescue Now</span>
               <span style={{fontSize:9,fontWeight:700,background:"#DC2626",color:"#fff",padding:"2px 8px",borderRadius:4}}>Urgent</span>
             </div>
-            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111827"}}>Project Ghost — T07</div>
+            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111111"}}>Project Ghost — T07</div>
             <div style={{fontSize:11,color:"#5A6069",marginBottom:10,lineHeight:1.6}}>
               Oxygen Test failed. No prototype URL. Evidence of rushed submission. AI-risk signal detected in Day 3 draft.
             </div>
@@ -203,12 +203,12 @@ function Overview() {
             <button style={{width:"100%",padding:"8px 14px",background:"#DC2626",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"var(--font)"}}>Generate Message</button>
           </div>
           {/* Clarify Now */}
-          <div style={{borderTop:"3px solid #D97706",padding:"var(--sp3)",borderRadius:6,background:"#FFFBEB"}}>
+          <div style={{borderTop:"3px solid #D97706",padding:"var(--sp3)",borderRadius:6,background:"#FBF4E6"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
               <span style={{fontSize:9,fontWeight:800,letterSpacing:".12em",textTransform:"uppercase",color:"#D97706"}}>🟡 Clarify Now</span>
               <span style={{fontSize:9,fontWeight:700,background:"#D97706",color:"#fff",padding:"2px 8px",borderRadius:4}}>Today</span>
             </div>
-            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111827"}}>Teams 03, 08, 12 — Incomplete Workflow</div>
+            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111111"}}>Teams 03, 08, 12 — Incomplete Workflow</div>
             <div style={{fontSize:11,color:"#5A6069",marginBottom:10,lineHeight:1.6}}>
               HITL Design Guide not opened. No workflow section in Day 3 draft. Conditionally passed Oxygen Test with unaddressed edge cases.
             </div>
@@ -221,12 +221,12 @@ function Overview() {
             <button style={{width:"100%",padding:"8px 14px",background:"#D97706",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"var(--font)"}}>Generate Messages</button>
           </div>
           {/* Polish Now */}
-          <div style={{borderTop:"3px solid #2563EB",padding:"var(--sp3)",borderRadius:6,background:"#EFF6FF"}}>
+          <div style={{borderTop:"3px solid #2563EB",padding:"var(--sp3)",borderRadius:6,background:"#EEF3FA"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
               <span style={{fontSize:9,fontWeight:800,letterSpacing:".12em",textTransform:"uppercase",color:"#2563EB"}}>🔵 Polish Now</span>
               <span style={{fontSize:9,fontWeight:700,background:"#2563EB",color:"#fff",padding:"2px 8px",borderRadius:4}}>This Afternoon</span>
             </div>
-            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111827"}}>Teams 02, 05, 09, 14 — Ready for Demo</div>
+            <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#111111"}}>Teams 02, 05, 09, 14 — Ready for Demo</div>
             <div style={{fontSize:11,color:"#5A6069",marginBottom:10,lineHeight:1.6}}>
               Passed Oxygen Test. Solid prototype URL. Governance section drafted. Risk: over-reliance on AI generation for presentation.
             </div>
@@ -258,9 +258,9 @@ function Overview() {
                       <stop offset="95%" stopColor="#059669" stopOpacity={0.01}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EF" vertical={false}/>
-                  <XAxis dataKey="day" tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false}/>
-                  <YAxis tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false} domain={[0,100]} ticks={[0,50,100]}/>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E4E0" vertical={false}/>
+                  <XAxis dataKey="day" tick={{fontSize:11,fill:"#5C5C5C"}} axisLine={false} tickLine={false}/>
+                  <YAxis tick={{fontSize:11,fill:"#5C5C5C"}} axisLine={false} tickLine={false} domain={[0,100]} ticks={[0,50,100]}/>
                   <Tooltip content={<CTip/>}/>
                   <Area type="monotone" dataKey="rate" stroke="#059669" strokeWidth={2.5} fill="url(#gGreen)" name="Completed %" isAnimationActive={false}/>
                 </AreaChart>
@@ -368,11 +368,11 @@ function Overview() {
             {fw:"HITL Pattern", status:"amber", desc:"3 teams need clarification", detail:"Review frequency not specified"},
             {fw:"Governance", status:"red", desc:"Only 2 teams have audit trail", detail:"Highest risk area for Day 4"},
           ].map(f => (
-            <div key={f.fw} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
+            <div key={f.fw} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"10px 0",borderBottom:"1px solid #F7F7F4"}}>
               <div style={{width:8,height:8,borderRadius:"50%",flexShrink:0,marginTop:4,background:f.status==="red"?"#DC2626":f.status==="amber"?"#D97706":f.status==="green"?"#059669":"#2563EB"}}/>
               <div style={{flex:1}}>
                 <div style={{fontSize:12,fontWeight:700,marginBottom:2}}>{f.fw}</div>
-                <div style={{fontSize:11,color:"#4B5563"}}>{f.desc}</div>
+                <div style={{fontSize:11,color:"#5C5C5C"}}>{f.desc}</div>
                 <div style={{fontSize:10,color:"#9CA3AF",marginTop:2}}>{f.detail}</div>
               </div>
               <span className={`badge badge-${f.status === "red" ? "red" : f.status === "amber" ? "amber" : f.status === "green" ? "green" : "blue"}`}>{f.status === "red" ? "Risk" : f.status === "amber" ? "Monitor" : f.status === "green" ? "Clear" : "OK"}</span>
@@ -392,9 +392,9 @@ function Overview() {
             {chartsMounted && chart3Width > 0 && (
               <ResponsiveContainer width={chart3Width} height={200}>
                 <BarChart data={teamScoresChart} barCategoryGap="28%">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E7EF" vertical={false}/>
-                  <XAxis dataKey="name" tick={{fontSize:10,fill:"#4B5563"}} axisLine={false} tickLine={false}/>
-                  <YAxis tick={{fontSize:11,fill:"#4B5563"}} axisLine={false} tickLine={false} domain={[0,100]}/>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E4E0" vertical={false}/>
+                  <XAxis dataKey="name" tick={{fontSize:10,fill:"#5C5C5C"}} axisLine={false} tickLine={false}/>
+                  <YAxis tick={{fontSize:11,fill:"#5C5C5C"}} axisLine={false} tickLine={false} domain={[0,100]}/>
                   <Tooltip content={<CTip/>}/>
                   <Bar dataKey="Score" fill="#2563EB" name="Overall Score" radius={[3,3,0,0]} maxBarSize={32}/>
                   <Bar dataKey="Oxygen" fill="#D97706" name="Oxygen Test" radius={[3,3,0,0]} maxBarSize={32}/>
@@ -413,7 +413,7 @@ function Overview() {
             {l:"Late Submission Grace", v:"8 cases", c:"#D97706"},
             {l:"Missing Citations", v:"3 cases", c:"#2563EB"},
           ].map(x => (
-            <div key={x.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",background:"#F8F9FC",borderRadius:6,borderLeft:`3px solid ${x.c}`,marginBottom:8}}>
+            <div key={x.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",background:"#EFEFED",borderRadius:6,borderLeft:`3px solid ${x.c}`,marginBottom:8}}>
               <span style={{fontSize:12,fontWeight:600}}>{x.l}</span>
               <span style={{fontSize:12,fontWeight:700,color:x.c}}>{x.v}</span>
             </div>
@@ -435,7 +435,7 @@ function Overview() {
             {label:"Day 3 — Prototype", status:"Fail", color:"#DC2626", detail:"No URL, no build log. Rushed draft"},
             {label:"Day 4 — Governance", status:"Unknown", color:"#9CA3AF", detail:"Cannot assess until Day 3 is complete"},
           ].map(d => (
-            <div key={d.label} style={{padding:"14px 16px",borderRight:"1px solid var(--rule)",background:"#FAFAFA"}}>
+            <div key={d.label} style={{padding:"14px 16px",borderRight:"1px solid var(--rule)",background:"#F7F7F4"}}>
               <div style={{fontSize:9,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:6}}>{d.label}</div>
               <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:d.color}}>{d.status}</div>
               <div style={{fontSize:11,color:"#5A6069",lineHeight:1.5}}>{d.detail}</div>
@@ -443,14 +443,14 @@ function Overview() {
           ))}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"var(--sp3)"}}>
-          <div style={{padding:"var(--sp3)",background:"#F8F9FC",borderRadius:8}}>
+          <div style={{padding:"var(--sp3)",background:"#EFEFED",borderRadius:8}}>
             <div style={{fontSize:9,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:8}}>Team Members</div>
-            <div style={{fontSize:12,color:"#111827",lineHeight:1.8}}>S3 (Team Lead) · S11 · S19 · S27</div>
+            <div style={{fontSize:12,color:"#111111",lineHeight:1.8}}>S3 (Team Lead) · S11 · S19 · S27</div>
             <div style={{fontSize:10,color:"#9CA3AF",marginTop:4}}>All anonymized · Avg engagement 38%</div>
           </div>
-          <div style={{padding:"var(--sp3)",background:"#F8F9FC",borderRadius:8}}>
+          <div style={{padding:"var(--sp3)",background:"#EFEFED",borderRadius:8}}>
             <div style={{fontSize:9,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:8}}>Recommended Professor Intervention</div>
-            <div style={{fontSize:12,color:"#111827",lineHeight:1.8}}>1. Immediate 1:1 with S3 to understand blocking issue<br/>2. Request Day 2 workflow resubmission by tonight 20:00<br/>3. Offer walk-in office hours for AI tool troubleshooting<br/>4. If no response by 22:00, send Generate Message with deadline</div>
+            <div style={{fontSize:12,color:"#111111",lineHeight:1.8}}>1. Immediate 1:1 with S3 to understand blocking issue<br/>2. Request Day 2 workflow resubmission by tonight 20:00<br/>3. Offer walk-in office hours for AI tool troubleshooting<br/>4. If no response by 22:00, send Generate Message with deadline</div>
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginTop:"var(--sp2)"}}>
@@ -458,7 +458,7 @@ function Overview() {
             {label:"GitHub Link", val:"github.com/ai-native-t07", status:"Linked"},
             {label:"Prototype URL", val:"Not submitted", status:"Missing"},
           ].map(r => (
-            <div key={r.label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 14px",background:r.status=="Missing"?"#FEF2F2":"#F8F9FC",borderRadius:6,borderLeft:`3px solid ${r.status=="Linked"?"#059669":"#DC2626"}`}}>
+            <div key={r.label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 14px",background:r.status=="Missing"?"#FBF0F1":"#EFEFED",borderRadius:6,borderLeft:`3px solid ${r.status=="Linked"?"#059669":"#DC2626"}`}}>
               <span style={{fontSize:11,fontWeight:600}}>{r.label}</span>
               <div style={{display:"flex",alignItems:"center",gap:8}}>
                 <span style={{fontSize:10,color:"#5A6069"}}>{r.val}</span>
@@ -489,12 +489,12 @@ function Overview() {
               {item:"Risk Note",team:"4 teams",done:false,urgent:false},
               {item:"Next Step Defined",team:"8 teams",done:true,urgent:false},
             ].map((e,i) => (
-              <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid var(--rule-light)",background:e.urgent&&!e.done?"#FEF2F2":"transparent"}}>
-                <div style={{width:18,height:18,borderRadius:4,border:"2px solid "+(e.done?"#059669":"#E4E7EF"),background:e.done?"#059669":"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid var(--rule-light)",background:e.urgent&&!e.done?"#FBF0F1":"transparent"}}>
+                <div style={{width:18,height:18,borderRadius:4,border:"2px solid "+(e.done?"#059669":"#E4E4E0"),background:e.done?"#059669":"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                   {e.done&&<svg viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2"><path d="M2 6l3 3 5-5"/></svg>}
                 </div>
                 <div style={{flex:1}}>
-                  <span style={{fontSize:12,fontWeight:600,color:e.urgent&&!e.done?"#DC2626":"#111827"}}>{e.item}</span>
+                  <span style={{fontSize:12,fontWeight:600,color:e.urgent&&!e.done?"#DC2626":"#111111"}}>{e.item}</span>
                   <span style={{fontSize:10,color:"#9CA3AF",marginLeft:8}}>{e.team}</span>
                 </div>
                 {e.urgent&&!e.done&&<span className="badge badge-red">Missing</span>}
@@ -514,7 +514,7 @@ function Overview() {
             {team:"T03", risk:"URL present but build fails. AI-risk signal in Day 3 draft.", level:"amber"},
             {team:"T11", risk:"Presentation looks complete but citation quality is low. Monitoring.", level:"amber"},
           ].map((s,i) => (
-            <div key={i} style={{padding:"12px var(--sp3)",border:"1px solid var(--rule)",borderRadius:6,marginBottom:8,borderLeft:`3px solid ${s.level==="red"?"#DC2626":"#D97706"}`,background:s.level==="red"?"#FEF2F2":"#FFFBEB"}}>
+            <div key={i} style={{padding:"12px var(--sp3)",border:"1px solid var(--rule)",borderRadius:6,marginBottom:8,borderLeft:`3px solid ${s.level==="red"?"#DC2626":"#D97706"}`,background:s.level==="red"?"#FBF0F1":"#FBF4E6"}}>
               <div style={{fontSize:13,fontWeight:800,marginBottom:3}}>{s.team}</div>
               <div style={{fontSize:11,color:"#5A6069",lineHeight:1.6}}>{s.risk}</div>
               <button style={{marginTop:10,padding:"6px 12px",background:s.level==="red"?"#DC2626":"#D97706",color:"#fff",border:"none",borderRadius:5,fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"var(--font)"}}>Generate Honest Feedback</button>
@@ -534,10 +534,10 @@ function Overview() {
           <span style={{fontSize:11,color:"#9CA3AF"}}>Based on all framework dimensions · Updated Day 3</span>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:0,overflow:"hidden",borderRadius:8,border:"1px solid var(--rule)"}}>
-          <div style={{padding:"10px 12px",background:"#F5F6F8",borderRight:"1px solid var(--rule)"}}>
+          <div style={{padding:"10px 12px",background:"#F6F6F3",borderRight:"1px solid var(--rule)"}}>
             <div style={{fontSize:9,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:8}}>Team</div>
             {teams.slice(0,6).map(t => (
-              <div key={t.id} style={{fontSize:11,fontWeight:700,padding:"5px 0",color:"#111827"}}>{t.name.replace("Project ","")}</div>
+              <div key={t.id} style={{fontSize:11,fontWeight:700,padding:"5px 0",color:"#111111"}}>{t.name.replace("Project ","")}</div>
             ))}
           </div>
           {[
@@ -548,13 +548,13 @@ function Overview() {
             {label:"Governance Risk", key:"governanceRisk"},
             {label:"AI Failure Answer", key:"aiNativeScore"},
           ].map((col,ci) => (
-            <div key={col.label} style={{padding:"10px 12px",borderRight:ci<5?"1px solid var(--rule)":"none",background:"#FAFAFA"}}>
+            <div key={col.label} style={{padding:"10px 12px",borderRight:ci<5?"1px solid var(--rule)":"none",background:"#F7F7F4"}}>
               <div style={{fontSize:9,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:8}}>{col.label}</div>
               {teams.slice(0,6).map((t,i) => {
                 const raw = t.problemClarity + t.painUrgency + t.aiNativeScore + t.prototypeReadiness;
                 const score = col.key==="oxygen" ? (t.oxygenTest==="Pass"?100:t.oxygenTest==="Conditionally Pass"?60:20) : Math.round(raw/4);
                 const color = score>=75?"#059669":score>=50?"#D97706":"#DC2626";
-                return <div key={i} style={{padding:"5px 0"}}><div style={{fontSize:12,fontWeight:800,color}}>{score}</div><div style={{height:3,borderRadius:2,background:"#E4E7EF",marginTop:3}}><div style={{height:3,borderRadius:2,width:score+"%",background:color}}/></div></div>;
+                return <div key={i} style={{padding:"5px 0"}}><div style={{fontSize:12,fontWeight:800,color}}>{score}</div><div style={{height:3,borderRadius:2,background:"#E4E4E0",marginTop:3}}><div style={{height:3,borderRadius:2,width:score+"%",background:color}}/></div></div>;
               })}
             </div>
           ))}
@@ -636,14 +636,14 @@ function Students() {
                 </tr>
                 {expanded===s.id&&(
                   <tr>
-                    <td colSpan={7} className="exp-detail" style={{background:"#F8F9FC"}}>
+                    <td colSpan={7} className="exp-detail" style={{background:"#EFEFED"}}>
                       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
                         <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Missing Assignments</div><div style={{fontSize:20,fontWeight:900}}>{s.missing}</div></div>
                         <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Late Submissions</div><div style={{fontSize:20,fontWeight:900}}>{s.late}</div></div>
                         <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>Materials Use</div><div style={{fontSize:20,fontWeight:900}}>{s.materialsOpened}%</div></div>
                         <div><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",color:"#9CA3AF",marginBottom:4}}>AI Risk Level</div><div style={{fontSize:20,fontWeight:900}}>{s.aiRisk}</div></div>
                       </div>
-                      <div style={{marginTop:10,fontSize:12,color:"#4B5563"}}><strong style={{color:"#4338CA"}}>Professor recommended action:</strong> {s.action}</div>
+                      <div style={{marginTop:10,fontSize:12,color:"#5C5C5C"}}><strong style={{color:"#4338CA"}}>Professor recommended action:</strong> {s.action}</div>
                     </td>
                   </tr>
                 )}
@@ -797,7 +797,7 @@ function Submission() {
             {l:"Student", v:"Student Gamma (S003)"}, {l:"Team", v:"T03 — Project Cipher"}, {l:"Submitted", v:"Late — Day 3, 11:47 PM"},
             {l:"Assignment", v:"Day 3 Workflow Document"}, {l:"Completeness", v:"75%"},
           ].map(r => (
-            <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #F0F2F8",fontSize:12}}>
+            <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #F7F7F4",fontSize:12}}>
               <span style={{color:"#9CA3AF",fontWeight:600}}>{r.l}</span>
               <span style={{fontWeight:700}}>{r.v}</span>
             </div>
@@ -823,11 +823,11 @@ function Submission() {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"var(--sp3)",marginBottom:"var(--sp3)"}}>
         <div className="card">
           <div className="card-head"><span className="card-title">Collaboration Evidence</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>{submissionAnalysis.collaborationEvidence}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#5C5C5C"}}>{submissionAnalysis.collaborationEvidence}</div>
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Individual Contribution</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>{submissionAnalysis.individualContributionQuality}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#5C5C5C"}}>{submissionAnalysis.individualContributionQuality}</div>
         </div>
       </div>
 
@@ -837,18 +837,18 @@ function Submission() {
           <div style={{marginBottom:10}}>
             <span className="badge badge-amber" style={{fontSize:12,padding:"4px 12px"}}>{submissionAnalysis.aiGeneratedContentRisk}</span>
           </div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563"}}>Rapid generation signals detected in workflow section. Governance section lacks depth typical of human-authored content.</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#5C5C5C"}}>Rapid generation signals detected in workflow section. Governance section lacks depth typical of human-authored content.</div>
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Source / Citation Quality</span></div>
-          <div style={{fontSize:12,lineHeight:1.7,color:"#4B5563",marginBottom:10}}>{submissionAnalysis.citationIssue}</div>
+          <div style={{fontSize:12,lineHeight:1.7,color:"#5C5C5C",marginBottom:10}}>{submissionAnalysis.citationIssue}</div>
           <div className="flag">⚠ Missing citations — human review required</div>
         </div>
       </div>
 
       <div className="card sp3">
         <div className="card-head"><span className="card-title">Suggested Feedback</span></div>
-        <div style={{fontSize:12,lineHeight:1.8,color:"#4B5563"}}>{submissionAnalysis.suggestedFeedback}</div>
+        <div style={{fontSize:12,lineHeight:1.8,color:"#5C5C5C"}}>{submissionAnalysis.suggestedFeedback}</div>
       </div>
 
       <div className="card" style={{border:"2px solid var(--red-border)",background:"var(--red-light)"}}>
@@ -856,7 +856,7 @@ function Submission() {
           <IconAlert />
           <div>
             <div style={{fontSize:13,fontWeight:800,marginBottom:4,color:"#DC2626"}}>Human Review Required</div>
-            <div style={{fontSize:12,color:"#4B5563"}}>{submissionAnalysis.humanReviewReason}</div>
+            <div style={{fontSize:12,color:"#5C5C5C"}}>{submissionAnalysis.humanReviewReason}</div>
           </div>
         </div>
       </div>
@@ -868,7 +868,7 @@ function Submission() {
 function Hitl() {
   const categories = [
     {
-      id:"airisk", label:"AI-Risk Review", color:"#DC2626", bg:"#FEF2F2", border:"#FECACA",
+      id:"airisk", label:"AI-Risk Review", color:"#DC2626", bg:"#FBF0F1", border:"#F0CDD1",
       icon:"🤖", desc:"AI-generated content signals, potential unattributed work, content that reads as AI-authored",
       items:[
         {id:"ar1", team:"T07 Project Ghost", reason:"Day 3 draft shows rapid generation pattern + no human review point in workflow", urgency:"High", evidence:"Governance section absent, language pattern matches GPT-4 output"},
@@ -877,7 +877,7 @@ function Hitl() {
       ]
     },
     {
-      id:"late", label:"Late Submission", color:"#D97706", bg:"#FFFBEB", border:"#FDE68A",
+      id:"late", label:"Late Submission", color:"#D97706", bg:"#FBF4E6", border:"#F3DFA8",
       icon:"⏰", desc:"Submissions received after the deadline — requires professor decision on grace",
       items:[
         {id:"lt1", team:"T07 Project Ghost", reason:"Day 3 Workflow Document — submitted 47 minutes late", urgency:"High", evidence:"Extension not requested. First late submission."},
@@ -887,7 +887,7 @@ function Hitl() {
       ]
     },
     {
-      id:"oxygen", label:"Weak Oxygen Test", color:"#2563EB", bg:"#EFF6FF", border:"#BFDBFE",
+      id:"oxygen", label:"Weak Oxygen Test", color:"#2563EB", bg:"#EEF3FA", border:"#BFDBFE",
       icon:"🫁", desc:"Teams that failed or conditionally passed the Oxygen Test — requires review of compensating evidence",
       items:[
         {id:"ox1", team:"T07 Project Ghost", reason:"Failed: No prototype URL, edge cases not addressed, governance section empty", urgency:"High", evidence:"Oxygen Test submitted with placeholder URL. No build log."},
@@ -896,7 +896,7 @@ function Hitl() {
       ]
     },
     {
-      id:"citations", label:"Missing Citations", color:"#7C3AED", bg:"#F5F3FF", border:"#DDD6FE",
+      id:"citations", label:"Missing Citations", color:"#7C3AED", bg:"#F6F6F3", border:"#DDD6FE",
       icon:"📚", desc:"Source attribution gaps — requires professor assessment of whether this is oversight or pattern",
       items:[
         {id:"ct1", team:"T03 Project Cipher", reason:"3 sources cited but not linked. Market size claim unsubstantiated.", urgency:"Medium", evidence:"URLs in bibliography all redirect to generic landing pages."},
@@ -904,7 +904,7 @@ function Hitl() {
       ]
     },
     {
-      id:"prototype", label:"Prototype Failure", color:"#059669", bg:"#ECFDF5", border:"#A7F3D0",
+      id:"prototype", label:"Prototype Failure", color:"#059669", bg:"#EDF6F1", border:"#A7F3D0",
       icon:"⚠", desc:"Prototype URL broken, build fails, or interface not accessible — requires professor assessment",
       items:[
         {id:"pf1", team:"T07 Project Ghost", reason:"Prototype URL not submitted. GitHub has no deployment branch.", urgency:"Critical", evidence:"No README with run instructions. No build log. No screenshot."},
@@ -926,7 +926,7 @@ function Hitl() {
       <NarrativeBar />
 
       {/* Decision buttons legend */}
-      <div className="card sp4" style={{background:"#F5F6F8",border:"1px solid var(--rule)",marginBottom:"var(--sp4)"}}>
+      <div className="card sp4" style={{background:"#F6F6F3",border:"1px solid var(--rule)",marginBottom:"var(--sp4)"}}>
         <div style={{display:"flex",gap:24,padding:"var(--sp2) var(--sp3)",flexWrap:"wrap"}}>
           {[
             {label:"Approve", color:"#059669", desc:"Evidence acceptable. No further action needed."},
@@ -959,7 +959,7 @@ function Hitl() {
           {cat.items.map(item => (
             <div key={item.id} style={{padding:"14px var(--sp3)",border:`1px solid ${cat.border}`,borderRadius:6,marginBottom:10,background:cat.bg}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                <div style={{fontSize:14,fontWeight:800,color:"#111827"}}>{item.team}</div>
+                <div style={{fontSize:14,fontWeight:800,color:"#111111"}}>{item.team}</div>
                 <span className={`badge badge-${item.urgency==="Critical"||item.urgency==="High"?"red":item.urgency==="Medium"?"amber":"blue"}`}>{item.urgency}</span>
               </div>
               <div style={{fontSize:12,color:"#5A6069",lineHeight:1.6,marginBottom:8}}>{item.reason}</div>
@@ -1020,16 +1020,16 @@ function Debrief() {
         <div className="card">
           <div className="card-head"><span className="card-title">Blocked Teams</span><span className="badge badge-red">2</span></div>
           {dailyDebrief.blockedTeams.map((t,i) => (
-            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
+            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F7F7F4"}}>
               <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:4}}>{t.split(":")[0]}</div>
-              <div style={{fontSize:11,color:"#4B5563"}}>{t.split(":").slice(1).join(":").trim()}</div>
+              <div style={{fontSize:11,color:"#5C5C5C"}}>{t.split(":").slice(1).join(":").trim()}</div>
             </div>
           ))}
         </div>
         <div className="card">
           <div className="card-head"><span className="card-title">Underused Materials</span><span className="badge badge-amber">3</span></div>
           {dailyDebrief.underusedMaterials.map((m,i) => (
-            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F0F2F8"}}>
+            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F7F7F4"}}>
               <div style={{fontSize:12,fontWeight:600,marginBottom:4}}>{m.split("(")[0].trim()}</div>
               <div style={{fontSize:11,color:"#9CA3AF"}}>{m.split("(")[1]?.replace(")","") || ""}</div>
             </div>
@@ -1125,8 +1125,8 @@ function Workflow() {
 
       <div className="card">
         <div className="card-head"><span className="card-title">HITL Key Principle</span></div>
-        <div style={{fontSize:14,fontWeight:800,color:"#111827",marginBottom:8}}>The system recommends. The professor decides.</div>
-        <div style={{fontSize:12,color:"#4B5563",lineHeight:1.7}}>
+        <div style={{fontSize:14,fontWeight:800,color:"#111111",marginBottom:8}}>The system recommends. The professor decides.</div>
+        <div style={{fontSize:12,color:"#5C5C5C",lineHeight:1.7}}>
           This cockpit is an AI-assisted decision support system — not an autonomous grading system. Every risk signal, every intervention recommendation, and every flagged submission requires professor sign-off before any student-facing action is taken. The AI surfaces patterns; the professor owns the judgment.
         </div>
       </div>
