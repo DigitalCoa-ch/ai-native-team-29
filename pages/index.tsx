@@ -1080,7 +1080,8 @@ function Workflow() {
         </div>
       </div>
 
-      <div className="wf-flow sp6">
+      <div className="wf-scroll-wrapper">
+        <div className="wf-flow sp6">
         <div className="wf-col wf-col-in">
           <div className="wf-col-title">
             <span>Inputs</span>
@@ -1121,6 +1122,7 @@ function Workflow() {
             <div key={i} className="wf-chip">{item}</div>
           ))}
         </div>
+      </div>
       </div>
 
       <div className="card">
